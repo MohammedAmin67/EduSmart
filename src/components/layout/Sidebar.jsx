@@ -7,34 +7,163 @@ import {
   User,
   Settings,
   PlayCircle,
-  X
+  X,
+  Sparkles,
+  Flame,
+  Star
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const menuVariants = {
-  hidden: { x: -64, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { type: 'spring', damping: 18, stiffness: 180 } },
-  exit: { x: -64, opacity: 0, transition: { duration: 0.28 } }
+  hidden: { 
+    x: -320, 
+    opacity: 0,
+    transition: { duration: 0.3, ease: "easeInOut" }
+  },
+  visible: { 
+    x: 0, 
+    opacity: 1, 
+    transition: { 
+      type: 'spring', 
+      damping: 25, 
+      stiffness: 200,
+      staggerChildren: 0.05
+    } 
+  },
+  exit: { 
+    x: -320, 
+    opacity: 0, 
+    transition: { duration: 0.25, ease: "easeInOut" } 
+  }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, x: -18 },
+  hidden: { opacity: 0, x: -20, scale: 0.95 },
   visible: (i) => ({
     opacity: 1,
     x: 0,
-    transition: { delay: i * 0.06, duration: 0.45 }
+    scale: 1,
+    transition: { 
+      delay: i * 0.05, 
+      duration: 0.4,
+      ease: "easeOut"
+    }
   }),
 };
 
+// Enhanced streak widget with more animations
+const StreakWidget = () => (
+  <motion.div
+    className="mx-4 mb-6 p-4 bg-gradient-to-br from-orange-400 via-red-500 to-pink-500 rounded-2xl shadow-lg relative overflow-hidden"
+    whileHover={{ scale: 1.02, y: -2 }}
+    transition={{ duration: 0.3 }}
+  >
+    {/* Animated background elements */}
+    <div className="absolute inset-0">
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-2 h-2 bg-white/30 rounded-full"
+          animate={{
+            y: [0, -20, 0],
+            opacity: [0.3, 1, 0.3],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 2 + i * 0.5,
+            repeat: Infinity,
+            delay: i * 0.3,
+          }}
+          style={{
+            left: `${20 + i * 12}%`,
+            top: `${30 + (i % 2) * 40}%`,
+          }}
+        />
+      ))}
+    </div>
+    
+    <div className="relative z-10">
+      <div className="flex items-center justify-between mb-2">
+        <motion.div
+          animate={{ rotate: [0, 10, -10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <Flame className="w-6 h-6 text-white" />
+        </motion.div>
+        <motion.div
+          className="text-2xl font-bold text-white"
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          7
+        </motion.div>
+      </div>
+      <div className="text-white font-bold text-sm mb-1">Day Streak!</div>
+      <div className="text-orange-100 text-xs">Keep the momentum going!</div>
+      
+      {/* Progress bar */}
+      <div className="mt-3 h-1.5 bg-white/20 rounded-full overflow-hidden">
+        <motion.div
+          className="h-full bg-white rounded-full"
+          initial={{ width: "0%" }}
+          animate={{ width: "85%" }}
+          transition={{ duration: 1.5, delay: 0.5 }}
+        />
+      </div>
+    </div>
+  </motion.div>
+);
+
+// Enhanced brand logo
+const BrandLogo = () => (
+  <motion.div
+    className="flex items-center space-x-3 px-4 py-6 border-b border-blue-200/30"
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+  >
+    <motion.div
+      className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg relative overflow-hidden"
+      whileHover={{ rotate: 360, scale: 1.1 }}
+      transition={{ duration: 0.8 }}
+    >
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500"
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+      />
+      <Sparkles className="w-6 h-6 text-white relative z-10" />
+    </motion.div>
+    <motion.span
+      className="font-bold text-xl text-gray-800"
+      animate={{
+        backgroundImage: [
+          "linear-gradient(45deg, #3B82F6, #8B5CF6)",
+          "linear-gradient(45deg, #8B5CF6, #EC4899)",
+          "linear-gradient(45deg, #EC4899, #3B82F6)",
+        ],
+      }}
+      transition={{ duration: 3, repeat: Infinity }}
+      style={{
+        backgroundClip: "text",
+        WebkitBackgroundClip: "text",
+        color: "transparent",
+      }}
+    >
+      EduSmart
+    </motion.span>
+  </motion.div>
+);
+
 const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'learning', label: 'Learning', icon: PlayCircle },
-    { id: 'courses', label: 'My Courses', icon: BookOpen },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { id: 'achievements', label: 'Achievements', icon: Trophy },
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: 'dashboard', label: 'Dashboard', icon: Home, badge: null },
+    { id: 'learning', label: 'Learning', icon: PlayCircle, badge: '3' },
+    { id: 'courses', label: 'My Courses', icon: BookOpen, badge: null },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3, badge: 'New' },
+    { id: 'achievements', label: 'Achievements', icon: Trophy, badge: '2' },
+    { id: 'profile', label: 'Profile', icon: User, badge: null },
+    { id: 'settings', label: 'Settings', icon: Settings, badge: null }
   ];
 
   const handleItemClick = (itemId) => {
@@ -44,142 +173,177 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
     }
   };
 
-  // Glassmorphism/gradient/glow styles
-  const sidebarBg =
-    "bg-gradient-to-br from-white/80 via-blue-100/70 to-blue-200/50 backdrop-blur-2xl shadow-2xl border-r-0 border-blue-200/30";
+  // Enhanced glassmorphism styles
+  const sidebarBg = "bg-gradient-to-br from-white/95 via-blue-50/90 to-blue-100/80 backdrop-blur-2xl shadow-2xl border-r border-blue-200/30";
 
   // Always visible on lg+ screens, controlled by isOpen on mobile
   const showSidebar = (typeof window === "undefined" || window.innerWidth >= 1024) ? true : isOpen;
 
   return (
     <>
-      {/* Overlay for mobile */}
+      {/* Enhanced overlay for mobile */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-60 lg:hidden z-[100]"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             onClick={onClose}
           />
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
+      {/* Enhanced Sidebar */}
       <AnimatePresence>
-        {(showSidebar) && (
-          <motion.aside
-            key="sidebar"
-            className={`
-              fixed top-0 left-0 h-full w-64 ${sidebarBg} z-[101]
-              transform lg:relative lg:translate-x-0 flex flex-col
-              border-r border-blue-200/30 transition-all
-              ${isOpen ? 'shadow-2xl' : ''}
-              max-w-full
-              lg:translate-x-0
-            `}
+        {showSidebar && (
+          <motion.div
+            className={`fixed left-0 top-0 h-full w-80 z-50 ${sidebarBg} lg:relative lg:z-auto`}
+            variants={menuVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            variants={menuVariants}
           >
-            {/* Close button for mobile */}
-            <div className="flex items-center justify-between p-6 border-b border-blue-100/40 lg:hidden">
-              <div className="w-8 h-8 bg-gradient-to-tr from-blue-600 via-blue-400 to-green-400 rounded-lg flex items-center justify-center shadow-md">
-                <BookOpen className="text-white" size={20} />
-              </div>
-              <button
-                onClick={onClose}
-                className="p-2 rounded-lg hover:bg-blue-100/70 transition"
-                aria-label="Close sidebar"
-              >
-                <X className="text-blue-700" size={22} />
-              </button>
-            </div>
+            {/* Enhanced close button for mobile */}
+            <motion.button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-2 rounded-xl hover:bg-white/20 transition-colors duration-200 lg:hidden z-10"
+              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </motion.button>
 
-            {/* Desktop Brand */}
-            <div className="p-6 pb-1 border-b border-blue-100/40 hidden lg:flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-tr from-blue-600 via-blue-400 to-green-400 rounded-lg flex items-center justify-center shadow-md">
-                <BookOpen className="text-white" size={20} />
-              </div>
-              <h1 className="text-xl font-bold text-gray-900 bg-gradient-to-r from-blue-700 to-purple-600 text-transparent bg-clip-text">EduSmart</h1>
-            </div>
+            {/* Brand Logo */}
+            <BrandLogo />
 
-            {/* Menu */}
-            <nav className="mt-8 pt-3 pb-3 flex-1 overflow-y-auto">
-              <ul className="space-y-3 px-2 sm:px-4">
+            {/* Enhanced Navigation Menu */}
+            <nav className="flex-1 py-6">
+              <div className="space-y-2 px-4">
                 {menuItems.map((item, i) => {
                   const Icon = item.icon;
                   const isActive = activeTab === item.id;
+
                   return (
-                    <motion.li
+                    <motion.button
                       key={item.id}
                       custom={i}
-                      initial="hidden"
-                      animate="visible"
                       variants={itemVariants}
+                      onClick={() => handleItemClick(item.id)}
+                      className={`
+                        w-full flex items-center justify-between px-4 py-4 rounded-2xl
+                        font-semibold text-base transition-all duration-300 group
+                        relative overflow-hidden
+                        ${isActive
+                          ? 'bg-gradient-to-r from-blue-500/20 via-purple-500/15 to-blue-500/20 text-blue-700 shadow-lg shadow-blue-500/25'
+                          : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-200/50 hover:to-purple-200/40 hover:text-blue-900 hover:shadow-md'
+                        }
+                      `}
+                      whileHover={{
+                        scale: 1.02,
+                        x: 4,
+                        transition: { duration: 0.2 }
+                      }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <motion.button
-                        onClick={() => handleItemClick(item.id)}
-                        className={`
-                          w-full flex items-center space-x-3 px-3 sm:px-4 py-3 rounded-xl
-                          font-medium text-base transition-all duration-200 group
-                          relative overflow-hidden
-                          ${isActive
-                            ? 'bg-gradient-to-r from-blue-500/20 to-purple-400/20 text-blue-700 shadow-[0_0_24px_4px_rgba(59,130,246,0.13)]'
-                            : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-200/70 hover:to-purple-200/60 hover:text-blue-900'
-                          }
-                        `}
-                        whileHover={{
-                          scale: 1.045,
-                          boxShadow: '0px 0px 20px 3px #6366f1',
-                          transition: { duration: 0.18 }
-                        }}
-                        whileTap={{ scale: 0.96 }}
-                      >
+                      {/* Animated background for active state */}
+                      {isActive && (
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl"
+                          layoutId="activeTab"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
+                      
+                      {/* Glow effect on hover */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"
+                        animate={isActive ? { opacity: 0.3 } : { opacity: 0 }}
+                      />
+                      
+                      <div className="flex items-center space-x-4 relative z-10">
+                        <motion.div
+                          whileHover={{ rotate: 10, scale: 1.1 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <Icon className={`w-6 h-6 transition-colors duration-300 ${isActive ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'}`} />
+                        </motion.div>
                         <span className="relative">
-                          <Icon
-                            size={20}
-                            className={`
-                              ${isActive
-                                ? 'text-blue-600 drop-shadow-[0_0_6px_#818cf8]'
-                                : 'group-hover:text-blue-500 text-gray-500 transition'
-                              }
-                            `}
-                          />
-                          {/* No weird border for active */}
+                          {item.label}
+                          {isActive && (
+                            <motion.div
+                              className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                              layoutId="underline"
+                              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                            />
+                          )}
                         </span>
-                        <span className="relative z-10">{item.label}</span>
-                      </motion.button>
-                    </motion.li>
+                      </div>
+                      
+                      {/* Enhanced badges */}
+                      {item.badge && (
+                        <motion.div
+                          className={`
+                            px-2.5 py-1 rounded-full text-xs font-bold relative z-10
+                            ${item.badge === 'New' 
+                              ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white' 
+                              : 'bg-gradient-to-r from-red-400 to-pink-500 text-white'
+                            }
+                          `}
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.2 + i * 0.05, type: "spring", stiffness: 500 }}
+                          whileHover={{ scale: 1.1 }}
+                        >
+                          {item.badge}
+                          
+                          {/* Pulse effect for new items */}
+                          {item.badge === 'New' && (
+                            <motion.div
+                              className="absolute inset-0 bg-green-400 rounded-full"
+                              animate={{ scale: [1, 1.3, 1], opacity: [0.7, 0, 0.7] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                            />
+                          )}
+                        </motion.div>
+                      )}
+                    </motion.button>
                   );
                 })}
-              </ul>
+              </div>
             </nav>
 
-            {/* Learning Streak Widget */}
+            {/* Enhanced Learning Streak Widget */}
+            <StreakWidget />
+            
+            {/* Bottom decoration */}
             <motion.div
-              className="px-2 sm:px-4 py-7 mt-auto flex justify-center"
-              initial={{ opacity: 0, y: 28 }}
+              className="px-4 pb-4"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.7 }}
+              transition={{ delay: 0.8 }}
             >
-              <motion.div
-                className="bg-gradient-to-r from-orange-400 via-pink-500 to-red-500/90 p-4 rounded-2xl text-white flex flex-col items-center w-full shadow-lg border-2 border-white/10 backdrop-blur-lg relative"
-                whileHover={{
-                  scale: 1.04,
-                  boxShadow: '0px 0px 32px 12px #f59e42',
-                  transition: { duration: 0.22 }
-                }}
-              >
-                <span className="text-2xl font-bold drop-shadow-glow animate-fire">🔥</span>
-                <span className="text-lg font-semibold mt-1 drop-shadow">7 Day Streak!</span>
-                <span className="text-sm opacity-90">Keep it up!</span>
-                <span className="absolute -top-3 -right-3 w-8 h-8 bg-orange-400/50 rounded-full blur-xl opacity-60 pointer-events-none"></span>
-              </motion.div>
+              <div className="flex items-center justify-center space-x-1 text-gray-400">
+                {[...Array(3)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      opacity: [0.5, 1, 0.5]
+                    }}
+                    transition={{ 
+                      duration: 1.5, 
+                      repeat: Infinity, 
+                      delay: i * 0.2 
+                    }}
+                  >
+                    <Star className="w-3 h-3 fill-current" />
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
-          </motion.aside>
+          </motion.div>
         )}
       </AnimatePresence>
     </>

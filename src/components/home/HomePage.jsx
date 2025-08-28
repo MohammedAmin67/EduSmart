@@ -3,6 +3,7 @@ import { BookOpen, Zap, TrendingUp, ShieldCheck, ChevronDown } from 'lucide-reac
 import Button from '../shared/Button';
 import Card from '../shared/Card';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 // Decorative animated SVGs
 const HeroShapes = () => (
@@ -61,7 +62,7 @@ const heroVariants = {
   })
 };
 
-const HomePage = ({ onLogin }) => {
+const HomePage = () => {
   // Smooth scroll to features
   const scrollToFeatures = () => {
     document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' });
@@ -93,12 +94,13 @@ const HomePage = ({ onLogin }) => {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.7, type: 'spring' }}
           >
-            <Button
-              className="shadow-lg bg-gradient-to-r from-blue-600 to-purple-500 hover:from-purple-600 hover:to-blue-500 text-white px-4 md:px-6 py-2 rounded-full font-semibold text-base tracking-wide transition-transform transform hover:scale-105 focus:ring-4 focus:ring-purple-300"
-              onClick={onLogin}
-            >
-              Login to Dashboard
-            </Button>
+            <Link to="/login">
+              <Button
+                className="shadow-lg bg-gradient-to-r from-blue-600 to-purple-500 hover:from-purple-600 hover:to-blue-500 text-white px-4 md:px-6 py-2 rounded-full font-semibold text-base tracking-wide transition-transform transform hover:scale-105 focus:ring-4 focus:ring-purple-300"
+              >
+                Login to Dashboard
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </header>
@@ -140,13 +142,14 @@ const HomePage = ({ onLogin }) => {
               variants={heroVariants}
               custom={3}
             >
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-blue-600 via-purple-500 to-pink-400 text-white text-lg px-6 sm:px-8 md:px-10 py-3 sm:py-4 shadow-2xl rounded-full font-bold blur-[0.5px] hover:from-purple-600 hover:to-blue-500 transition-all duration-300 hover:shadow-[0_0_32px_14px_rgba(168,85,247,0.2)] animate-glow"
-                onClick={onLogin}
-              >
-                Start Learning Now
-              </Button>
+              <Link to="/signup">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-600 via-purple-500 to-pink-400 text-white text-lg px-6 sm:px-8 md:px-10 py-3 sm:py-4 shadow-2xl rounded-full font-bold blur-[0.5px] hover:from-purple-600 hover:to-blue-500 transition-all duration-300 hover:shadow-[0_0_32px_14px_rgba(168,85,247,0.2)] animate-glow"
+                >
+                  Start Learning Now
+                </Button>
+              </Link>
             </motion.div>
             <motion.div
               variants={heroVariants}
@@ -248,13 +251,14 @@ const HomePage = ({ onLogin }) => {
             Ready to get started? <span className="text-yellow-300 animate-glow">Join EduSmart today!</span>
           </div>
           <motion.div whileHover={{ scale: 1.07, boxShadow: '0px 0px 36px 8px #facc15' }}>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 via-purple-500 to-yellow-400 text-white text-lg px-6 sm:px-8 md:px-10 py-3 sm:py-4 shadow-2xl rounded-full font-bold hover:from-purple-600 hover:to-blue-500 transition-all duration-300 animate-glow"
-              onClick={onLogin}
-            >
-              Create Your Free Account
-            </Button>
+            <Link to="/signup">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-blue-600 via-purple-500 to-yellow-400 text-white text-lg px-6 sm:px-8 md:px-10 py-3 sm:py-4 shadow-2xl rounded-full font-bold hover:from-purple-600 hover:to-blue-500 transition-all duration-300 animate-glow"
+              >
+                Create Your Free Account
+              </Button>
+            </Link>
           </motion.div>
         </motion.div>
         <motion.div
