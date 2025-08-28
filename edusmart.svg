@@ -1,0 +1,19 @@
+<svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="edusmart-gradient" x1="10" y1="10" x2="46" y2="46" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563eb"/> <!-- blue-600 -->
+      <stop offset="0.5" stop-color="#60a5fa"/> <!-- blue-400 -->
+      <stop offset="1" stop-color="#34d399"/> <!-- green-400 -->
+    </linearGradient>
+  </defs>
+  <!-- Rounded rectangle background -->
+  <rect x="4" y="4" width="48" height="48" rx="12" fill="url(#edusmart-gradient)" />
+  <!-- BookOpen icon (Lucide, white) -->
+  <g>
+    <path d="M20.5 38C18.2909 38 17.1863 38 16.408 37.4546C15.7487 36.9818 15.3225 36.2075 15.2026 35.3325C15 33.8717 15 31.8056 15 28.5C15 25.1944 15 23.1283 15.2026 21.6675C15.3225 20.7925 15.7487 20.0182 16.408 19.5454C17.1863 19 18.2909 19 20.5 19H35.5C37.7091 19 38.8137 19 39.592 19.5454C40.2513 20.0182 40.6775 20.7925 40.7974 21.6675C41 23.1283 41 25.1944 41 28.5C41 31.8056 41 33.8717 40.7974 35.3325C40.6775 36.2075 40.2513 36.9818 39.592 37.4546C38.8137 38 37.7091 38 35.5 38H20.5Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M19 19V16.5A2.5 2.5 0 0 1 21.5 14H34.5A2.5 2.5 0 0 1 37 16.5V19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M28 34V24" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 24L20.5 25.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 24L35.5 25.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
