@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Page Not Found</title>
+    <script>
+      // SPA Fallback for GitHub Pages
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <h1>404 - Page Not Found</h1>
+    <p>If you are not redirected automatically, <a href="/">click here</a>.</p>
+    <script>
+      // If not at /, redirect to root with the intended path in sessionStorage
+      if (location.pathname !== "/EduSmart/" && !location.pathname.match(/^\/EduSmart\/?$/)) {
+        sessionStorage.redirect = location.pathname + location.search + location.hash;
+        location.replace("/EduSmart/");
+      }
+    </script>
+  </body>
+</html>
