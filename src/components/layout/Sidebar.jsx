@@ -135,7 +135,7 @@ const BrandLogo = () => (
       <Sparkles className="w-6 h-6 text-white relative z-10" />
     </motion.div>
     <motion.span
-      className="font-bold text-xl text-gray-800"
+      className="font-bold text-xl text-gray-800 dark:text-gray-100"
       animate={{
         backgroundImage: [
           "linear-gradient(45deg, #3B82F6, #8B5CF6)",
@@ -174,7 +174,7 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
   };
 
   // Enhanced glassmorphism styles
-  const sidebarBg = "bg-gradient-to-br from-white/95 via-blue-50/90 to-blue-100/80 backdrop-blur-2xl shadow-2xl border-r border-blue-200/30";
+  const sidebarBg = "bg-gradient-to-br from-white/95 via-blue-50/90 to-blue-100/80 dark:from-gray-950 dark:via-blue-900 dark:to-blue-950 backdrop-blur-2xl shadow-2xl border-r border-blue-200/30 dark:border-blue-900/30 transition-colors duration-500";
 
   // Always visible on lg+ screens, controlled by isOpen on mobile
   const showSidebar = (typeof window === "undefined" || window.innerWidth >= 1024) ? true : isOpen;
@@ -208,11 +208,11 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
             {/* Enhanced close button for mobile */}
             <motion.button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-xl hover:bg-white/20 transition-colors duration-200 lg:hidden z-10"
+              className="absolute top-4 right-4 p-2 rounded-xl hover:bg-white/20 dark:hover:bg-gray-700/30 transition-colors duration-200 lg:hidden z-10"
               whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
             >
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
             </motion.button>
 
             {/* Brand Logo */}
@@ -236,8 +236,8 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
                         font-semibold text-base transition-all duration-300 group
                         relative overflow-hidden
                         ${isActive
-                          ? 'bg-gradient-to-r from-blue-500/20 via-purple-500/15 to-blue-500/20 text-blue-700 shadow-lg shadow-blue-500/25'
-                          : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-200/50 hover:to-purple-200/40 hover:text-blue-900 hover:shadow-md'
+                          ? 'bg-gradient-to-r from-blue-500/20 via-purple-500/15 to-blue-500/20 text-blue-700 dark:text-blue-300 shadow-lg shadow-blue-500/25'
+                          : 'text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-blue-200/50 hover:to-purple-200/40 hover:dark:from-blue-900/40 hover:dark:to-purple-900/40 hover:text-blue-900 dark:hover:text-blue-100 hover:shadow-md'
                         }
                       `}
                       whileHover={{
@@ -267,7 +267,7 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
                           whileHover={{ rotate: 10, scale: 1.1 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <Icon className={`w-6 h-6 transition-colors duration-300 ${isActive ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'}`} />
+                          <Icon className={`w-6 h-6 transition-colors duration-300 ${isActive ? 'text-blue-600 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-200'}`} />
                         </motion.div>
                         <span className="relative">
                           {item.label}
@@ -324,7 +324,7 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <div className="flex items-center justify-center space-x-1 text-gray-400">
+              <div className="flex items-center justify-center space-x-1 text-gray-400 dark:text-gray-500">
                 {[...Array(3)].map((_, i) => (
                   <motion.div
                     key={i}

@@ -2,10 +2,134 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Design System Variables (HSL for full theming) */
+@layer base {
+  :root {
+    --background: 240 20% 98%;
+    --foreground: 240 10% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 15%;
+    --primary: 260 100% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 280 100% 70%;
+    --secondary: 210 100% 96%;
+    --secondary-foreground: 260 100% 45%;
+    --muted: 240 20% 96%;
+    --muted-foreground: 240 5% 50%;
+    --accent: 200 100% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 20% 90%;
+    --input: 240 20% 95%;
+    --ring: 260 100% 55%;
 
-.glass-card {
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(16px) saturate(150%);
-  border-radius: 1.25rem;
-  border: 1px solid rgba(200,200,255,0.18);
+    /* Gamification Colors */
+    --xp-gold: 45 100% 55%;
+    --xp-glow: 45 100% 70%;
+    --success: 120 60% 50%;
+    --success-glow: 120 60% 65%;
+    --level-up: 280 100% 60%;
+    --achievement: 320 100% 55%;
+    --achievement-glow: 320 100% 70%;
+    --streak: 25 100% 50%;
+    --streak-glow: 45 100% 70%;
+
+    /* Custom Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-hero: linear-gradient(135deg, hsl(260 100% 55%), hsl(200 100% 60%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(240 20% 98%));
+    --gradient-xp: linear-gradient(90deg, hsl(var(--xp-gold)), hsl(var(--xp-glow)));
+
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.3);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
+    --shadow-card: 0 4px 20px -2px hsl(240 10% 15% / 0.1);
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 240 10% 8%;
+    --foreground: 240 20% 95%;
+    --card: 240 10% 12%;
+    --card-foreground: 240 20% 95%;
+    --popover: 240 10% 12%;
+    --popover-foreground: 240 20% 95%;
+    --primary: 260 100% 65%;
+    --primary-foreground: 240 10% 8%;
+    --primary-glow: 280 100% 75%;
+    --secondary: 240 10% 18%;
+    --secondary-foreground: 240 20% 95%;
+    --muted: 240 10% 15%;
+    --muted-foreground: 240 10% 60%;
+    --accent: 200 100% 65%;
+    --accent-foreground: 240 10% 8%;
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 240 10% 8%;
+    --border: 240 10% 20%;
+    --input: 240 10% 18%;
+    --ring: 260 100% 65%;
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-hero: linear-gradient(135deg, hsl(260 100% 65%), hsl(200 100% 65%));
+    --gradient-card: linear-gradient(145deg, hsl(240 10% 12%), hsl(240 10% 15%));
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.5);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.6);
+    --shadow-card: 0 4px 20px -2px hsl(0 0% 0% / 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+  .gradient-card {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+  }
+  .xp-bar {
+    background: var(--gradient-xp);
+    box-shadow: 0 0 20px hsl(var(--xp-gold) / 0.5);
+  }
+  .hover-lift {
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl;
+  }
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)];
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  .animate-bounce-slow {
+    animation: bounce 3s infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(1deg); }
+  50% { transform: translateY(-20px) rotate(0deg); }
+  75% { transform: translateY(-10px) rotate(-1deg); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 20px hsl(var(--primary) / 0.5); }
+  to { box-shadow: 0 0 40px hsl(var(--primary-glow) / 0.8); }
 }

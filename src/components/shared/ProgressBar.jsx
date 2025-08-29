@@ -37,11 +37,6 @@ const ProgressBar = ({
           style={{ width: `${percentage}%` }}
         />
       </div>
-      {showPercentage && (
-        <div className="mt-1 text-sm text-gray-600 text-right">
-          {Math.round(percentage)}%
-        </div>
-      )}
     </div>
   );
 };

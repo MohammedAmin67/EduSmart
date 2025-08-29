@@ -25,7 +25,6 @@ const Modal = ({
     } else {
       document.body.style.overflow = 'unset';
     }
-
     return () => {
       document.body.style.overflow = 'unset';
     };
@@ -53,7 +52,6 @@ const Modal = ({
               </button>
             )}
           </div>
-          
           {/* Content */}
           <div className="p-6">
             {children}

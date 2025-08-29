@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Award, BookOpen, Star } from 'lucide-react';
+import { User } from 'lucide-react';
 
 const Avatar = ({ user, size = 'lg', showLevel = true, animated = false }) => {
   const sizes = {
@@ -22,8 +22,6 @@ const Avatar = ({ user, size = 'lg', showLevel = true, animated = false }) => {
       <div className={`${sizes[size]} ${getAvatarColor(user.level)} rounded-full flex items-center justify-center text-white shadow-lg ${animated ? 'transition-all duration-300 hover:scale-105' : ''}`}>
         <User size={size === 'sm' ? 16 : size === 'md' ? 20 : size === 'lg' ? 24 : 28} />
       </div>
-      
-      {/* Level Badge */}
       {showLevel && (
         <div className="absolute -bottom-1 -right-2 bg-yellow-400 text-yellow-900 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-md">
           {user.level}

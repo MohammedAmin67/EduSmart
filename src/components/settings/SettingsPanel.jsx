@@ -1,46 +1,144 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from 'react';
+import { Sun, Moon, Save, Loader2 } from 'lucide-react';
+import Card from '../shared/Card';
+import Button from '../shared/Button';
+import { DarkModeContext } from '../../App';
 
-const SettingsPanel = () => {
-  // Example state for notifications toggle
-  const [notifications, setNotifications] = useState(true);
+const SettingsPage = () => {
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+  const [animating, setAnimating] = useState(false);
+  const [fadeToDark, setFadeToDark] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    emailNotifications: true,
+    marketingEmails: false,
+    privacy: 'public',
+  });
+
+  const handleDarkToggle = () => {
+    setFadeToDark(!darkMode);
+    setAnimating(true);
+    setTimeout(() => {
+      toggleDarkMode();
+      setTimeout(() => setAnimating(false), 400);
+    }, 60);
+  };
+
+  const handleChange = (e) => {
+    const { name, type, checked, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setTimeout(() => {
+      setSaving(false);
+    }, 1200);
+  };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white rounded-xl shadow p-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Settings</h2>
-      
-      {/* User Preferences */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold mb-3">Preferences</h3>
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-gray-700">Enable Notifications</span>
-          {/* Improved toggle switch */}
-          <button
-            type="button"
-            aria-pressed={notifications}
-            onClick={() => setNotifications(!notifications)}
-            className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 ${notifications ? "bg-blue-600" : "bg-gray-300"}`}
-          >
-            <span
-              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow transition-transform duration-200 ease-in-out ${notifications ? "translate-x-7" : "translate-x-1"}`}
-            />
-          </button>
+    <div className="max-w-2xl mx-auto mt-10 space-y-8 transition-colors duration-500 px-2">
+      {/* Dark Mode Toggle -- allowed on settings! */}
+      <Card className="flex items-center justify-between p-6 bg-white dark:bg-gray-900 border-0 shadow-lg">
+        <div>
+          <h2 className="font-bold text-lg text-gray-900 dark:text-gray-100">Theme</h2>
+          <p className="text-gray-600 dark:text-gray-300 text-sm">Switch between light and dark mode for a comfortable experience.</p>
         </div>
-      </div>
-
-      {/* Account Management */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3">Account</h3>
         <button
-          className="bg-gradient-to-r from-red-400 to-red-600 text-white px-6 py-2 rounded-lg shadow hover:from-red-500 hover:to-red-700 hover:shadow-lg transition-all duration-150 font-semibold tracking-wide flex items-center gap-2 active:scale-95 outline-none focus:ring-2 focus:ring-red-400"
+          onClick={handleDarkToggle}
+          className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-500 ml-4"
+          aria-label="Toggle dark mode"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-          </svg>
-          Delete Account
+          {darkMode ? <Sun size={24} /> : <Moon size={24} />}
         </button>
-      </div>
+      </Card>
+
+      <form onSubmit={handleSave}>
+        <Card className="p-6 bg-white dark:bg-gray-900 border-0 shadow-lg space-y-7">
+          <h2 className="font-bold text-lg text-gray-900 dark:text-gray-100 mb-2">Notification Settings</h2>
+          <div className="flex items-center justify-between">
+            <label className="font-medium text-gray-700 dark:text-gray-200">
+              <input
+                type="checkbox"
+                name="emailNotifications"
+                checked={form.emailNotifications}
+                onChange={handleChange}
+                className="mr-2 accent-pink-500"
+              />
+              Email Notifications
+            </label>
+            <span className="text-gray-400 text-xs">Receive updates via email</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <label className="font-medium text-gray-700 dark:text-gray-200">
+              <input
+                type="checkbox"
+                name="marketingEmails"
+                checked={form.marketingEmails}
+                onChange={handleChange}
+                className="mr-2 accent-pink-500"
+              />
+              Marketing Emails
+            </label>
+            <span className="text-gray-400 text-xs">Occasional tips & offers</span>
+          </div>
+        </Card>
+
+        <Card className="p-6 bg-white dark:bg-gray-900 border-0 shadow-lg mt-7 space-y-5">
+          <h2 className="font-bold text-lg text-gray-900 dark:text-gray-100 mb-2">Privacy</h2>
+          <div className="flex items-center gap-4">
+            <label className="text-gray-700 dark:text-gray-200 font-semibold">
+              <input
+                type="radio"
+                name="privacy"
+                value="public"
+                checked={form.privacy === "public"}
+                onChange={handleChange}
+                className="mr-2 accent-pink-500"
+              />
+              Public
+            </label>
+            <label className="text-gray-700 dark:text-gray-200 font-semibold">
+              <input
+                type="radio"
+                name="privacy"
+                value="private"
+                checked={form.privacy === "private"}
+                onChange={handleChange}
+                className="mr-2 accent-pink-500"
+              />
+              Private
+            </label>
+          </div>
+          <div className="text-xs text-gray-400">
+            {form.privacy === "public"
+              ? "Your profile and achievements are visible to others."
+              : "Your learning progress is private and only visible to you."}
+          </div>
+        </Card>
+
+        <div className="flex justify-end mt-6">
+          <Button type="submit" size="lg" className="flex items-center gap-2">
+            {saving ? (
+              <>
+                <Loader2 className="animate-spin" size={20} />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save size={20} />
+                Save Changes
+              </>
+            )}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };
 
-export default SettingsPanel;
+export default SettingsPage;

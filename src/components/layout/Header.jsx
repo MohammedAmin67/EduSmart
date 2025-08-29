@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Bell, Menu } from 'lucide-react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Search, Bell, Menu, Sun, Moon } from 'lucide-react';
 import Avatar from '../shared/Avatar';
 import { userData } from '../../data/mockData';
 import { motion, useAnimation } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { DarkModeContext } from '../../App';
 
-// Animated gradient logo
+// Animated gradient logo (unchanged)
 const AnimatedLogo = () => (
   <motion.div
     initial={{ scale: 0.8, rotate: -10, opacity: 0.4 }}
@@ -47,56 +49,63 @@ const AnimatedLogo = () => (
   </motion.div>
 );
 
-// XP star
+// XP star (unchanged)
 const Star = ({ className, size }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
   </svg>
 );
 
-const Header = ({ onMenuToggle }) => {
+const Header = ({ onMenuToggle, setActiveTab }) => {
   const [shadow, setShadow] = useState(false);
   const controls = useAnimation();
+  const navigate = useNavigate(); 
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+
+  // This is the main dark mode background color (from your main page): #181F2A
+  const BG_DARK = "rgba(24,31,42,1)";
+  const BG_LIGHT = "rgba(255,255,255,1)";
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 8) {
-        setShadow(true);
-        controls.start({ boxShadow: "0 2px 24px 0 rgba(59,130,246,0.15)", backgroundColor: "rgba(255,255,255,0.93)" });
-      } else {
-        setShadow(false);
-        controls.start({ boxShadow: "0 0px 0px 0 rgba(0,0,0,0)", backgroundColor: "rgba(255,255,255,0.99)" });
-      }
+      setShadow(window.scrollY > 8);
+      controls.start({
+        boxShadow: window.scrollY > 8
+          ? "0 2px 24px 0 rgba(59,130,246,0.15)"
+          : "0 0px 0px 0 rgba(0,0,0,0)",
+        backgroundColor: darkMode ? BG_DARK : BG_LIGHT,
+        transition: { duration: 0.3 }
+      });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [controls]);
+  }, [controls, darkMode]);
 
   return (
     <motion.header
-      className={`border-b border-blue-100/40 px-2 sm:px-4 py-2 sm:py-3 sticky top-0 z-40 w-full transition-shadow backdrop-blur-lg`}
+      className="border-b border-blue-100/10 px-2 sm:px-4 py-2 sm:py-3 sticky rounded-s-md top-0 z-40 w-full transition-shadow backdrop-blur-lg transition-colors duration-500"
       animate={controls}
-      initial={{ boxShadow: "0 0px 0px 0 rgba(0,0,0,0)", backgroundColor: "rgba(255,255,255,0.99)" }}
+      initial={{
+        boxShadow: "0 0px 0px 0 rgba(0,0,0,0)",
+        backgroundColor: darkMode ? BG_DARK : BG_LIGHT,
+      }}
       style={{ WebkitBackdropFilter: "blur(12px)", backdropFilter: "blur(12px)" }}
     >
       <div className="flex items-center justify-between">
+        {/* Left side: menu, logo, search */}
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* Mobile menu button */}
           <motion.button
             onClick={onMenuToggle}
-            className="lg:hidden p-2 rounded-lg hover:bg-blue-100/60 transition"
+            className="lg:hidden p-2 rounded-lg hover:bg-blue-100/60 dark:hover:bg-blue-900/30 transition"
             whileTap={{ scale: 0.94 }}
             aria-label="Open sidebar"
           >
             <Menu size={24} />
           </motion.button>
-
-          {/* Animated logo */}
           <div className="flex items-center space-x-2">
             <AnimatedLogo />
           </div>
-
-          {/* Desktop search bar */}
           <motion.div
             className="hidden md:flex items-center space-x-2 ml-3 sm:ml-5"
             initial={{ x: 24, opacity: 0 }}
@@ -108,32 +117,31 @@ const Header = ({ onMenuToggle }) => {
               <input
                 type="text"
                 placeholder="Search courses, lessons..."
-                className="pl-10 pr-4 py-2 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent w-full bg-white/90 transition"
+                className="pl-10 pr-4 py-2 border border-blue-200 dark:border-blue-700 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent w-full bg-white/90 dark:bg-gray-800 dark:text-gray-100 transition-colors"
               />
             </div>
           </motion.div>
         </div>
 
+        {/* Right side: XP, bell, dark toggle, avatar/name */}
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* XP Display */}
           <motion.div
-            className="hidden sm:flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-blue-200 px-2 sm:px-3 py-1 rounded-lg shadow font-semibold"
+            className="hidden sm:flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-gray-800 dark:to-gray-700 px-2 sm:px-3 py-1 rounded-lg shadow font-semibold"
             initial={{ y: -13, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.18, duration: 0.45 }}
           >
             <Star className="text-yellow-400 drop-shadow" size={16} />
-            <span className="font-semibold text-blue-700 text-sm">{userData.totalXP} XP</span>
+            <span className="font-semibold text-blue-700 dark:text-yellow-200 text-sm">{userData.totalXP} XP</span>
           </motion.div>
 
-          {/* Notifications */}
           <motion.button
-            className="relative p-2 rounded-lg hover:bg-blue-100/40 transition group"
+            className="relative p-2 rounded-lg hover:bg-blue-100/40 dark:hover:bg-blue-900/30 transition group"
             whileHover={{ scale: 1.11, boxShadow: '0px 0px 16px 0 #818cf8' }}
             whileTap={{ scale: 0.92 }}
             aria-label="Notifications"
           >
-            <Bell size={20} className="text-blue-600 group-hover:text-blue-800 transition" />
+            <Bell size={20} className="text-blue-600 group-hover:text-blue-800 dark:text-blue-400 dark:group-hover:text-blue-300 transition" />
             <motion.span
               className="absolute -top-1 -right-1 bg-gradient-to-tr from-pink-500 to-yellow-400 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ring-2 ring-white shadow-xl animate-bounce"
               animate={{ scale: [1, 1.16, 1], rotate: [0, -10, 0] }}
@@ -143,33 +151,32 @@ const Header = ({ onMenuToggle }) => {
             </motion.span>
           </motion.button>
 
-          {/* User Avatar & info */}
+          <button
+            onClick={toggleDarkMode}
+            className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-500"
+            aria-label="Toggle dark mode"
+          >
+            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
+          {/* Avatar and Name/Level aligned side by side and responsive */}
           <motion.div
-            className="flex items-center space-x-1 sm:space-x-3"
+            className="flex items-center space-x-2 sm:space-x-3 cursor-pointer"
             initial={{ x: 18, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.23, duration: 0.5 }}
+            onClick={() => setActiveTab && setActiveTab('profile')}
+            tabIndex={0}
+            role="button"
+            aria-label="Go to profile page"
+            onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && setActiveTab) setActiveTab('profile'); }}
           >
             <div className="w-8 h-8 sm:w-10 sm:h-10">
               <Avatar user={userData} size="sm" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-300 shadow hover:ring-2 hover:ring-blue-400 transition" />
             </div>
-            <div className="hidden md:block">
-              <motion.p
-                className="font-semibold text-gray-900"
-                initial={{ y: 8, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.34, duration: 0.3 }}
-              >
-                {userData.name}
-              </motion.p>
-              <motion.p
-                className="text-sm text-blue-500 font-medium"
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.3 }}
-              >
-                Level {userData.level}
-              </motion.p>
+            <div className="hidden sm:flex flex-col justify-center min-w-0">
+              <span className="font-semibold text-gray-900 dark:text-gray-100 truncate">{userData.name}</span>
+              <span className="text-xs text-blue-500 dark:text-blue-300 font-medium truncate">Level {userData.level}</span>
             </div>
           </motion.div>
         </div>
