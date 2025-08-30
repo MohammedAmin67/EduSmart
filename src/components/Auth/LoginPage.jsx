@@ -127,7 +127,7 @@ const LoginPage = ({ onBack, onLogin, onGoToSignUp }) => {
           <Button
             type="submit"
             size="lg"
-            className="w-full bg-gradient-to-r from-pink-600 via-fuchsia-500 to-yellow-400 text-white text-lg px-6 py-3 rounded-full font-bold hover:from-fuchsia-600 hover:to-pink-500 transition-all duration-300 shadow-xl animate-glow"
+            className="w-full bg-gradient-to-r from-pink-600 via-fuchsia-500 to-yellow-400 text-white text-lg px-6 py-3 rounded-full font-bold hover:from-fuchsia-600 hover:to-pink-500 transition-all duration-700 shadow-xl animate-glow"
             disabled={submitting}
           >
             {submitting ? 'Logging in...' : 'Login'}

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Search, Bell, Menu, Sun, Moon } from 'lucide-react';
 import Avatar from '../shared/Avatar';
-import { userData } from '../../data/mockData';
 import { motion, useAnimation } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { DarkModeContext } from '../../App';
+import { useUser } from '../context/UserContext';
 
 // Animated gradient logo (unchanged)
 const AnimatedLogo = () => (
@@ -61,6 +61,7 @@ const Header = ({ onMenuToggle, setActiveTab }) => {
   const controls = useAnimation();
   const navigate = useNavigate(); 
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+  const { user } = useUser();
 
   // This is the main dark mode background color (from your main page): #181F2A
   const BG_DARK = "rgba(24,31,42,1)";
@@ -84,7 +85,7 @@ const Header = ({ onMenuToggle, setActiveTab }) => {
 
   return (
     <motion.header
-      className="border-b border-blue-100/10 px-2 sm:px-4 py-2 sm:py-3 sticky rounded-s-md top-0 z-40 w-full transition-shadow backdrop-blur-lg transition-colors duration-500"
+      className="border-b border-blue-100/10 px-2 sm:px-4 py-2 sm:py-3 relative rounded-s-md top-0 z-40 w-full transition-shadow backdrop-blur-lg transition-colors duration-500"
       animate={controls}
       initial={{
         boxShadow: "0 0px 0px 0 rgba(0,0,0,0)",
@@ -124,7 +125,7 @@ const Header = ({ onMenuToggle, setActiveTab }) => {
         </div>
 
         {/* Right side: XP, bell, dark toggle, avatar/name */}
-        <div className="flex items-center space-x-2 sm:space-x-4">
+        <div className="flex items-center gap-3 sm:gap-3 pr-3">
           <motion.div
             className="hidden sm:flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-gray-800 dark:to-gray-700 px-2 sm:px-3 py-1 rounded-lg shadow font-semibold"
             initial={{ y: -13, opacity: 0 }}
@@ -132,7 +133,7 @@ const Header = ({ onMenuToggle, setActiveTab }) => {
             transition={{ delay: 0.18, duration: 0.45 }}
           >
             <Star className="text-yellow-400 drop-shadow" size={16} />
-            <span className="font-semibold text-blue-700 dark:text-yellow-200 text-sm">{userData.totalXP} XP</span>
+            <span className="font-semibold text-blue-700 dark:text-yellow-200 text-sm">{user.totalXP} XP</span>
           </motion.div>
 
           <motion.button
@@ -150,11 +151,11 @@ const Header = ({ onMenuToggle, setActiveTab }) => {
               3
             </motion.span>
           </motion.button>
-
           <button
             onClick={toggleDarkMode}
             className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-500"
             aria-label="Toggle dark mode"
+            style={{ marginRight: '0.1rem' }}
           >
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
@@ -171,12 +172,12 @@ const Header = ({ onMenuToggle, setActiveTab }) => {
             aria-label="Go to profile page"
             onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && setActiveTab) setActiveTab('profile'); }}
           >
-            <div className="w-8 h-8 sm:w-10 sm:h-10">
-              <Avatar user={userData} size="sm" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-300 shadow hover:ring-2 hover:ring-blue-400 transition" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center ml-1">
+              <Avatar user={user} size="sm" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-300 shadow hover:ring-2 hover:ring-blue-400 transition" />
             </div>
-            <div className="hidden sm:flex flex-col justify-center min-w-0">
-              <span className="font-semibold text-gray-900 dark:text-gray-100 truncate">{userData.name}</span>
-              <span className="text-xs text-blue-500 dark:text-blue-300 font-medium truncate">Level {userData.level}</span>
+            <div className="hidden sm:flex flex-col justify-center min-w-0 pl-3">
+              <span className="font-semibold text-gray-900 dark:text-gray-100 truncate">{user.name}</span>
+              <span className="text-xs text-blue-500 dark:text-blue-300 font-medium truncate">Level {user.level}</span>
             </div>
           </motion.div>
         </div>

@@ -68,7 +68,7 @@ const LessonPlayer = ({ selectedCourseId }) => {
 
   if (!lesson) {
     return (
-      <Card className="p-6 text-center">
+      <Card className="p-6 text-center bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950">
         <div className="text-lg font-semibold text-gray-700 dark:text-gray-200">
           No lessons found for this course.
         </div>
@@ -114,7 +114,7 @@ const LessonPlayer = ({ selectedCourseId }) => {
       </div>
 
       {/* Video Player */}
-      <Card padding="none" className="overflow-hidden">
+      <Card padding="none" className="overflow-hidden bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-blue-950">
         <div className="relative bg-gray-900 aspect-video flex items-center justify-center min-h-[180px] sm:min-h-0">
           {/* Video Placeholder */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center">
@@ -164,7 +164,7 @@ const LessonPlayer = ({ selectedCourseId }) => {
       </Card>
 
       {/* Key Points */}
-      <Card>
+      <Card className="bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-blue-950">
         <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center text-gray-900 dark:text-gray-100">
           <BookOpen className="mr-2" size={18} />
           Key Learning Points
@@ -182,7 +182,7 @@ const LessonPlayer = ({ selectedCourseId }) => {
       </Card>
 
       {/* Transcript Toggle */}
-      <Card>
+      <Card className="bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-blue-950">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-2">
           <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">Transcript</h3>
           <Button

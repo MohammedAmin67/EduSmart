@@ -1,14 +1,19 @@
 import React from 'react';
-import { Award, Star, Flame, TrendingUp, Trophy, Clock, CheckCircle } from 'lucide-react';
+import { Award, Star, Flame, TrendingUp, Trophy, Clock, CheckCircle, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Card from '../shared/Card';
 import ProgressBar from '../shared/ProgressBar';
 import Button from '../shared/Button';
-import { userData, dailyActivity, analyticsData, achievements } from '../../data/mockData';
+import { dailyActivity, analyticsData, achievements } from '../../data/mockData';
+import { useUser } from "../context/UserContext";
 
 const ProgressOverview = ({ setActiveTab }) => {
+  const { user } = useUser();
+  const navigate = useNavigate();
+
   const progressPercent = Math.min(
     100,
-    Math.round((userData.totalXP / (userData.totalXP + userData.xpToNextLevel)) * 100)
+    Math.round((user.totalXP / (user.totalXP + user.xpToNextLevel)) * 100)
   );
 
   // Get next achievement to unlock (locked, closest progress)
@@ -22,6 +27,11 @@ const ProgressOverview = ({ setActiveTab }) => {
         )
       : null;
 
+  // Use navigate to go to /dashboard/profile on click
+  const handleViewProfile = () => {
+    navigate('/dashboard/profile');
+  };
+
   return (
     <div className="flex flex-col gap-8 mt-8 transition-colors duration-500">
       <div className="flex items-center justify-between">
@@ -32,8 +42,9 @@ const ProgressOverview = ({ setActiveTab }) => {
           variant="outline"
           size="sm"
           className="hover:scale-105 transition"
-          onClick={() => setActiveTab && setActiveTab('profile')}
-        >
+          onClick={() => navigate('/dashboard/profile')}
+          >
+          <User className="w-4 h-4 mr-1" />
           View Profile
         </Button>
       </div>
@@ -44,33 +55,41 @@ const ProgressOverview = ({ setActiveTab }) => {
           <div className="flex-1">
             <div className="flex items-center gap-4 mb-3">
               <div className="relative">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl bg-blue-200 dark:bg-blue-600 font-extrabold text-white shadow">
-                  {userData.name[0]}
-                </div>
-                {userData.currentStreak >= 5 && (
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-blue-300 shadow"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl bg-blue-200 dark:bg-blue-600 font-extrabold text-white shadow">
+                    {user.name[0]}
+                  </div>
+                )}
+                {user.currentStreak >= 5 && (
                   <div className="absolute -bottom-1 -right-1 flex items-center gap-1 bg-white dark:bg-gray-900 rounded-full px-2 py-0.5 shadow text-xs text-orange-500 font-bold border border-orange-200 dark:border-orange-400">
                     <Flame size={14} className="mr-1" />
-                    {userData.currentStreak}d
+                    {user.currentStreak}d
                   </div>
                 )}
               </div>
               <div>
-                <h3 className="font-bold text-xl text-gray-900 dark:text-gray-100">{userData.name}</h3>
-                <div className="text-xs text-gray-500 dark:text-gray-300">Level {userData.level}</div>
+                <h3 className="font-bold text-xl text-gray-900 dark:text-gray-100">{user.name}</h3>
+                <div className="text-xs text-gray-500 dark:text-gray-300">Level {user.level}</div>
               </div>
               <div className="ml-auto flex flex-col items-end">
                 <div className="text-xs text-blue-600 dark:text-yellow-200 font-bold flex items-center gap-1">
-                  <Star size={14} className="text-yellow-400" /> XP: {userData.totalXP}
+                  <Star size={14} className="text-yellow-400" /> XP: {user.totalXP}
                 </div>
                 <div className="text-xs text-gray-400 dark:text-gray-200 flex items-center gap-1">
-                  <Trophy size={13} className="text-yellow-600" /> Rank: {userData.level >= 10 ? 'Pro' : 'Learner'}
+                  <Trophy size={13} className="text-yellow-600" /> Rank: {user.level >= 10 ? 'Pro' : 'Learner'}
                 </div>
               </div>
             </div>
             <div className="mb-3">
               <div className="flex justify-between text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                <span>{userData.totalXP} XP</span>
-                <span>{userData.xpToNextLevel} XP to next level</span>
+                <span>{user.totalXP} XP</span>
+                <span>{user.xpToNextLevel} XP to next level</span>
               </div>
               <ProgressBar
                 progress={progressPercent}
@@ -83,28 +102,28 @@ const ProgressOverview = ({ setActiveTab }) => {
               <div className="flex items-center gap-2">
                 <TrendingUp className="text-blue-600 dark:text-blue-300" size={20} />
                 <div>
-                  <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{userData.stats.totalLessonsCompleted}</div>
+                  <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{user.stats.totalLessonsCompleted}</div>
                   <div className="text-xs text-gray-500 dark:text-gray-300">Lessons</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Award className="text-yellow-500" size={20} />
                 <div>
-                  <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{userData.stats.coursesCompleted}</div>
+                  <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{user.stats.coursesCompleted}</div>
                   <div className="text-xs text-gray-500 dark:text-gray-300">Courses</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Star className="text-green-500" size={20} />
                 <div>
-                  <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{userData.stats.averageAccuracy}%</div>
+                  <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{user.stats.averageAccuracy}%</div>
                   <div className="text-xs text-gray-500 dark:text-gray-300">Accuracy</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Flame className="text-orange-500" size={20} />
                 <div>
-                  <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{userData.currentStreak}d</div>
+                  <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{user.currentStreak}d</div>
                   <div className="text-xs text-gray-500 dark:text-gray-300">Streak</div>
                 </div>
               </div>
@@ -166,7 +185,7 @@ const ProgressOverview = ({ setActiveTab }) => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-gray-500 dark:text-gray-300 mt-2">
         <div className="flex items-center gap-1 bg-white/70 dark:bg-gray-800/70 rounded-lg px-3 py-2 shadow">
           <Clock size={13} />
-          <span>{userData.stats.totalTimeSpent} min total</span>
+          <span>{user.stats.totalTimeSpent} min total</span>
         </div>
         <div className="flex items-center gap-1 bg-white/70 dark:bg-gray-800/70 rounded-lg px-3 py-2 shadow">
           <Award size={13} />

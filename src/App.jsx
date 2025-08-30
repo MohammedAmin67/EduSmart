@@ -1,5 +1,5 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, createContext } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Header from './components/layout/Header';
 import Sidebar from './components/layout/Sidebar';
 import ProgressOverview from './components/dashboard/ProgressOverview';
@@ -7,7 +7,7 @@ import ContinueLearning from './components/dashboard/ContinueLearning';
 import AnalyticsCharts from './components/analytics/AnalyticsCharts';
 import LessonPlayer from './components/learning/LessonPlayer';
 import QuizSystem from './components/learning/QuizSystem';
-import XPTracker from './components/profile/XPTracker';
+import Profile from './components/profile/Profile';
 import AchievementGallery from './components/profile/AchievementGallery';
 import CourseGrid from './components/courses/CourseGrid';
 import HomePage from './components/home/HomePage';
@@ -15,6 +15,7 @@ import SettingsPanel from './components/settings/SettingsPanel';
 import SignUpPage from './components/Auth/SignUpPage';
 import LoginPage from './components/Auth/LoginPage';
 import toast from 'react-hot-toast';
+import { UserProvider } from './components/context/UserContext';
 
 // Dark mode context
 export const DarkModeContext = createContext({
@@ -26,7 +27,8 @@ export const DarkModeContext = createContext({
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // ---- UPDATED: load from localStorage ----
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("isLoggedIn") === "true");
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const navigate = useNavigate();
 
@@ -36,6 +38,18 @@ function App() {
     if (saved) return saved === "dark";
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
+
+  const location = useLocation();
+
+   useEffect(() => {
+    if (location.pathname.startsWith('/dashboard/profile')) setActiveTab('profile');
+    else if (location.pathname.startsWith('/dashboard/analytics')) setActiveTab('analytics');
+    else if (location.pathname.startsWith('/dashboard/courses')) setActiveTab('courses');
+    else if (location.pathname.startsWith('/dashboard/learning')) setActiveTab('learning');
+    else if (location.pathname.startsWith('/dashboard/achievements')) setActiveTab('achievements');
+    else if (location.pathname.startsWith('/dashboard/settings')) setActiveTab('settings');
+    else setActiveTab('dashboard');
+  }, [location.pathname]);
 
   // Whenever darkMode changes, update html class and localStorage
   useEffect(() => {
@@ -114,7 +128,7 @@ function App() {
       case 'achievements':
         return <AnimatedMain><AchievementGallery /></AnimatedMain>;
       case 'profile':
-        return <AnimatedMain><XPTracker /></AnimatedMain>;
+        return <AnimatedMain><Profile /></AnimatedMain>;
       case 'settings':
         return (
           <AnimatedMain>
@@ -126,64 +140,82 @@ function App() {
     }
   };
 
+  // ---- Keep login state and localStorage in sync ----
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", "true");
+    navigate('/dashboard');
+  };
+
+  const handleSignUp = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", "true");
+    navigate('/dashboard');
+  };
+
+  // Optionally, a logout function (call it from somewhere in the app)
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("isLoggedIn");
+    navigate('/');
+  };
+
   return (
     <DarkModeContext.Provider value={{ darkMode, setDarkMode, toggleDarkMode }}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/signup"
-          element={
-            <SignUpPage
-              onBack={() => navigate(-1)}
-              onSignUp={() => {
-                setIsLoggedIn(true);
-                navigate('/dashboard');
-              }}
-            />
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <LoginPage
-              onBack={() => navigate(-1)}
-              onLogin={() => {
-                setIsLoggedIn(true);
-                navigate('/dashboard');
-              }}
-              onGoToSignUp={() => navigate('/signup')}
-            />
-          }
-        />
-        <Route
-          path="/dashboard/*"
-          element={
-            isLoggedIn ? (
-              <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 animate-fadeIn transition-colors">
-                <div className="flex">
-                  <Sidebar
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                    isOpen={sidebarOpen}
-                    onClose={() => setSidebarOpen(false)}
-                    onLearningTabClick={handleLearningTabClick} 
-                  />
-                  <div className="flex-1 lg:ml-64">
-                    <Header 
-                      onMenuToggle={() => setSidebarOpen(!sidebarOpen)} 
+      <UserProvider>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/signup"
+            element={
+              <SignUpPage
+                onBack={() => navigate(-1)}
+                onSignUp={handleSignUp}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <LoginPage
+                onBack={() => navigate(-1)}
+                onLogin={handleLogin}
+                onGoToSignUp={() => navigate('/signup')}
+              />
+            }
+          />
+          <Route
+            path="/dashboard/*"
+            element={
+              isLoggedIn ? (
+                <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 animate-fadeIn transition-colors">
+                  <div className="flex">
+                    <Sidebar
+                      activeTab={activeTab}
                       setActiveTab={setActiveTab}
+                      isOpen={sidebarOpen}
+                      onClose={() => setSidebarOpen(false)}
+                      onLearningTabClick={handleLearningTabClick} 
                     />
-                    <main className="p-4 lg:p-8">{renderContent()}</main>
+                    {/* Remove lg:ml-64 so content is always flush with sidebar; sidebar is fixed, so apply pt-[64px] to main to offset header */}
+                    <div className="flex-1">
+                      <Header 
+                        onMenuToggle={() => setSidebarOpen(!sidebarOpen)} 
+                        setActiveTab={setActiveTab}
+                        // You can pass handleLogout here for a logout button
+                      />
+                      <main className="p-4 lg:p-8 pt-[72px]">{renderContent()}</main>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </UserProvider>
     </DarkModeContext.Provider>
   );
 }

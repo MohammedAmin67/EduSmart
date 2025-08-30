@@ -199,7 +199,7 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
       <AnimatePresence>
         {showSidebar && (
           <motion.div
-            className={`fixed left-0 top-0 h-full w-80 z-50 ${sidebarBg} lg:relative lg:z-auto`}
+            className={`fixed rounded-sm left-0 top-0 h-full w-80 z-50 ${sidebarBg} lg:relative lg:z-auto`}
             variants={menuVariants}
             initial="hidden"
             animate="visible"

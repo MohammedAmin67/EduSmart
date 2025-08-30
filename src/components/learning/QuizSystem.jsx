@@ -570,7 +570,12 @@ const QuizSystem = ({ selectedCourseId }) => {
           title="Quiz Result"
           size="sm"
         >
-          <div className="text-center space-y-4">
+          <div className={`
+            text-center space-y-4 
+            bg-white dark:bg-gray-900 
+            rounded-xl p-4
+            transition-colors duration-300
+          `}>
             <div className={`text-4xl sm:text-6xl ${lastResult.isCorrect ? 'text-green-500' : 'text-red-500'}`}>
               {lastResult.isCorrect ? '🎉' : '😔'}
             </div>
